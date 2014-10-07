@@ -58,12 +58,18 @@ function add_placeholder_sizes() {
  * @return array
  */
 function filter_images( $meta ) {
+	// Generate placeholders for each image size
 	foreach( $meta['sizes'] as $name => $data ) {
 		if ( false !== strpos( $name, '-ph' ) ) {
 			$new_file = create_placeholder( $data['file'] );
 			$meta['sizes'][ $name ]['file'] = $new_file;
 		}
 	}
+
+	// Generate a placeholder for the full image
+	$file = basename( $meta['file'] );
+	$new_parent = create_placeholder( $file );
+	$meta['sizes']['full-ph']['file'] = $new_parent;
 
 	return $meta;
 }
