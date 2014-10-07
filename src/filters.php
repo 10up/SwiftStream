@@ -21,8 +21,30 @@ function add_placeholder_sizes() {
 
 	$new_sizes = array();
 
-	foreach( $_wp_additional_image_sizes as $name => $args ) {
-		$new_sizes[ $name . '-ph' ] = $args;
+	foreach( get_intermediate_image_sizes() as $name ) {
+		if ( isset( $_wp_additional_image_sizes[ $name ]['width'] ) ) {
+			$width = absint( $_wp_additional_image_sizes[ $name ]['width'] );
+		} else {
+			$width = absint( get_option( "{$name}_size_w" ) );
+		}
+
+		if ( isset( $_wp_additional_image_sizes[ $name ]['height'] ) ) {
+			$height = absint( $_wp_additional_image_sizes[ $name ]['height'] );
+		} else {
+			$height = absint( get_option( "{$name}_size_h" ) );
+		}
+
+		if ( isset( $_wp_additional_image_sizes[ $name ]['crop'] ) ) {
+			$crop = $_wp_additional_image_sizes[ $name ]['crop'];
+		} else {
+			$crop = get_option( "{$name}_crop" );
+		}
+
+		$new_sizes[ $name . '-ph' ] = array(
+			'width'  => $width,
+			'height' => $height,
+			'crop'   => $crop,
+		);
 	}
 
 	$_wp_additional_image_sizes = array_merge( $_wp_additional_image_sizes, $new_sizes );
@@ -74,8 +96,8 @@ function create_placeholder( $image_filename ) {
 
 	$image->resize( $width, $height, false );
 	$image->save( trailingslashit( $uploads['path'] ) . $new_name );
+	$image->set_quality( 10 );
 	$image->resize( $old_width, $old_height, false );
-	$image->set_quality( 25 );
 	$image->save( trailingslashit( $uploads['path'] ) . $new_name );
 
 	return $new_name;
