@@ -1,0 +1,19 @@
+{
+    "name"             : "10up/swiftstream",
+    "description"      : "Image lazy-loader for WordPress.",
+    "license"          : "MIT",
+    "authors"          : [
+        {
+            "name" : "Eric Mann",
+            "email": "eric@eamann.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require"          : {},
+	"require-dev"      : {
+		"10up/wp_mock"        : "dev-master",
+		"antecedent/patchwork": "1.2.*",
+		"phpunit/phpunit"     : "*@stable",
+		"brianium/paratest"   : "dev-master"
+	}
+}
