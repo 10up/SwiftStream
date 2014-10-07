@@ -69,7 +69,23 @@ function filter_images( $meta ) {
 	// Generate a placeholder for the full image
 	$file = basename( $meta['file'] );
 	$new_parent = create_placeholder( $file );
-	$meta['sizes']['full-ph']['file'] = $new_parent;
+	$file_ext = pathinfo( $file, PATHINFO_EXTENSION );
+	$mime_type = 'application/octet-stream';
+
+	$mime_types = wp_get_mime_types();
+	foreach( $mime_types as $extension => $type ) {
+		if ( preg_match( "/{$file_ext}/i", $extension ) ) {
+			$mime_type = $type;
+			break;
+		}
+	}
+
+	$meta['sizes']['full-ph'] = array(
+		'file'      => $new_parent,
+		'width'     => $meta['width'],
+		'height'    => $meta['height'],
+		'mime-type' => $mime_type,
+	);
 
 	return $meta;
 }
@@ -100,9 +116,8 @@ function create_placeholder( $image_filename ) {
 	// Placeholder filename
 	$new_name = preg_replace( '/(\.gif|\.jpg|\.jpeg|\.png)/', '-ph$1', $image_filename );
 
-	$image->resize( $width, $height, false );
-	$image->save( trailingslashit( $uploads['path'] ) . $new_name );
 	$image->set_quality( 10 );
+	$image->resize( $width, $height, false );
 	$image->resize( $old_width, $old_height, false );
 	$image->save( trailingslashit( $uploads['path'] ) . $new_name );
 
