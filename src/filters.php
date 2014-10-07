@@ -7,7 +7,6 @@ function setup() {
 	};
 
 	add_action( 'after_setup_theme',               $n( 'add_placeholder_sizes' ), 999, 0 );
-	add_filter( 'image_resize_dimensions',         $n( 'upscale_dimensions' ),    1,   6 );
 	add_filter( 'wp_generate_attachment_metadata', $n( 'filter_images' ),         10,  1 );
 }
 
@@ -58,6 +57,12 @@ function add_placeholder_sizes() {
  * @return array
  */
 function filter_images( $meta ) {
+	$n = function( $function ) {
+		return __NAMESPACE__ . "\\$function";
+	};
+
+	add_filter( 'image_resize_dimensions', $n( 'upscale_dimensions' ), 1, 6 );
+
 	// Generate placeholders for each image size
 	foreach( $meta['sizes'] as $name => $data ) {
 		if ( false !== strpos( $name, '-ph' ) ) {
@@ -86,6 +91,8 @@ function filter_images( $meta ) {
 		'height'    => $meta['height'],
 		'mime-type' => $mime_type,
 	);
+
+	remove_filter( 'image_resize_dimensions', $n( 'upscale_dimensions' ), 1 );
 
 	return $meta;
 }
