@@ -126,7 +126,7 @@ function create_placeholder( $image_filename ) {
 	// Placeholder filename
 	$new_name = preg_replace( '/(\.gif|\.jpg|\.jpeg|\.png)/', '-ph$1', $image_filename );
 
-	$image->set_quality( 100 );
+	$image->set_quality( 10 );
 	$image->resize( $width, $height, false );
 	$image->resize( $old_width, $old_height, false );
 	$image->save( trailingslashit( $uploads['path'] ) . $new_name );
