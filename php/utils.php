@@ -9,7 +9,17 @@ function setup() {
 		return __NAMESPACE__ . "\\$function";
 	};
 
+	add_action( 'init',                               $n( 'register_scripts' ),           10, 1 );
 	add_filter( 'wp_get_attachment_image_attributes', $n( 'get_attachment_placeholder' ), 10, 2 );
+}
+
+/**
+ * Register our scripts with WordPress
+ */
+function register_scripts() {
+	if ( defined( 'SWIFTSTREAM_PATH' ) ) {
+		wp_register_script( 'lazy-loader', SWIFTSTREAM_PATH . 'js/imageLoader.js', array( 'jquery' ), '1.0.0', true );
+	}
 }
 
 /**
@@ -53,6 +63,11 @@ function get_attachment_placeholder( $attr, $attachment ) {
 	if ( strpos( $placeholder[0], '-ph.' ) !== false ) {
 		$attr['data-lazy'] = $attr['src'];
 		$attr['src'] = $placeholder[0];
+
+		// If we're swapping images, we need to set up our scripts
+		if ( defined( 'SWIFTSTREAM_PATH' ) ) {
+			wp_enqueue_script( 'lazy-loader' );
+		}
 	}
 
 	return $attr;

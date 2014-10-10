@@ -14,8 +14,8 @@ if ( version_compare( PHP_VERSION, "5.3", "<" ) ) {
 }
 
 // Require files
-require_once __DIR__ . '/src/pixelate.php';
-require_once __DIR__ . '/src/utils.php';
+require_once __DIR__ . '/php/pixelate.php';
+require_once __DIR__ . '/php/utils.php';
 
 // Bootstrap
 Pixelate\setup();
