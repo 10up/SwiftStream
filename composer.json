@@ -8,6 +8,8 @@
             "email": "eric@eamann.com"
         }
     ],
+	"version"          : "1.0.0",
+	"type"             : "wordpress-library",
     "minimum-stability": "stable",
     "require"          : {},
 	"require-dev"      : {

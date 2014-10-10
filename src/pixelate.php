@@ -1,6 +1,9 @@
 <?php
-namespace TenUp\SwiftStream\Filters;
+namespace TenUp\SwiftStream\v1_0_0\Pixelate;
 
+/**
+ * Set up any required hooks in the namespace.
+ */
 function setup() {
 	$n = function( $function ) {
 		return __NAMESPACE__ . "\\$function";
