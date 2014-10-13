@@ -21,6 +21,10 @@ function setup() {
 function add_placeholder_sizes() {
 	global $_wp_additional_image_sizes;
 
+	if( !isset( $_wp_additional_image_sizes ) ){
+		$_wp_additional_image_sizes = array();
+	}
+
 	$new_sizes = array();
 
 	foreach( get_intermediate_image_sizes() as $name ) {
