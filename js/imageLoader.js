@@ -65,12 +65,26 @@
 				maybeLoad( images );
 				throttle_id = undefined;
 			},
-			250
+			50
 		);
+	} );
+
+	$window.on( 'swiftstream.init', function() {
+		// Reset bound variables
+		images = $( 'img[data-lazy]');
+
+		if ( undefined !== throttle_id ) {
+			window.clearTimeout( throttle_id );
+
+			throttle_id = undefined;
+		}
+
+		// Load visible images
+		maybeLoad( images );
 	} );
 
 	// Fire our image parser immediately to force visible images into the display
 	window.setTimeout( function() {
-		maybeLoad( images );
+		$window.trigger( 'swiftstream.init' );
 	}, 1 );
 } )( window, jQuery );

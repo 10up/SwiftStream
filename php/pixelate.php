@@ -1,5 +1,5 @@
 <?php
-namespace TenUp\SwiftStream\v1_0_0\Pixelate;
+namespace TenUp\SwiftStream\v1_1_0\Pixelate;
 
 /**
  * Set up any required hooks in the namespace.
@@ -9,8 +9,11 @@ function setup() {
 		return __NAMESPACE__ . "\\$function";
 	};
 
-	add_action( 'after_setup_theme',               $n( 'add_placeholder_sizes' ), 999, 0 );
-	add_filter( 'wp_generate_attachment_metadata', $n( 'filter_images' ),         10,  1 );
+	// Only hook in to create intermediate images if we're _not_ on WordPress.com.
+	if ( ! defined( 'WPCOM_IS_VIP_ENV' ) || ! WPCOM_IS_VIP_ENV ) {
+		add_action( 'after_setup_theme',               $n( 'add_placeholder_sizes' ), 999, 0 );
+		add_filter( 'wp_generate_attachment_metadata', $n( 'filter_images' ),         10,  1 );
+	}
 }
 
 /**
