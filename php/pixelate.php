@@ -73,17 +73,21 @@ function filter_images( $meta ) {
 
 	add_filter( 'image_resize_dimensions', $n( 'upscale_dimensions' ), 1, 6 );
 
+	$uploads = wp_upload_dir();
+
+	// Generate a placeholder for the full image
+	$file           = basename( $meta[ 'file' ] );
+	$file_base_path = trailingslashit( $uploads[ 'basedir' ] ) . str_replace( $file, '', $meta[ 'file' ] );
+	$new_parent     = create_placeholder( $file, $file_base_path );
+
 	// Generate placeholders for each image size
 	foreach( $meta['sizes'] as $name => $data ) {
 		if ( false !== strpos( $name, '-ph' ) ) {
-			$new_file = create_placeholder( $data['file'] );
+			$new_file = create_placeholder( $data['file'], $file_base_path );
 			$meta['sizes'][ $name ]['file'] = $new_file;
 		}
 	}
 
-	// Generate a placeholder for the full image
-	$file = basename( $meta['file'] );
-	$new_parent = create_placeholder( $file );
 	$file_ext = pathinfo( $file, PATHINFO_EXTENSION );
 	$mime_type = 'application/octet-stream';
 
@@ -111,13 +115,11 @@ function filter_images( $meta ) {
  * Create a placeholder image given a regular image.
  *
  * @param string $image_filename
- *
+ * @param string $base_file_path
  * @return string
  */
-function create_placeholder( $image_filename ) {
-	$uploads = wp_upload_dir();
-	$file = trailingslashit( $uploads['path'] ) . $image_filename;
-	$image = wp_get_image_editor( $file );
+function create_placeholder( $image_filename, $base_file_path ) {
+	$image = wp_get_image_editor( trailingslashit( $base_file_path ) . $file );
 
 	if ( is_wp_error( $image ) ) {
 		return $image_filename;
@@ -136,7 +138,7 @@ function create_placeholder( $image_filename ) {
 	$image->set_quality( 10 );
 	$image->resize( $width, $height, false );
 	$image->resize( $old_width, $old_height, false );
-	$image->save( trailingslashit( $uploads['path'] ) . $new_name );
+	$image->save( trailingslashit( $base_file_path ) . $new_name );
 
 	return $new_name;
 }
