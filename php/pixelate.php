@@ -119,7 +119,7 @@ function filter_images( $meta ) {
  * @return string
  */
 function create_placeholder( $image_filename, $base_file_path ) {
-	$image = wp_get_image_editor( trailingslashit( $base_file_path ) . $file );
+	$image = wp_get_image_editor( trailingslashit( $base_file_path ) . $image_filename );
 
 	if ( is_wp_error( $image ) ) {
 		return $image_filename;
